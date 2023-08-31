@@ -1,0 +1,12 @@
+name: Reusable workflow example
+on:
+ push:
+   branches:
+     - master
+jobs:
+  calling-WF:
+    uses: .github/workflows/demo-called workflow.yaml@master
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+    
