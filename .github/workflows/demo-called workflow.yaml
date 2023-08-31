@@ -13,8 +13,6 @@ on:
         default: console,results.sarif
         description: patch where the oytput file of checov scan needs to be downloaded
    secrets:
-     GITHUB_TOKEN:
-       required: true
      SONAR_TOKEN:
        required: true
      SONAR_PROJECT_KEY:
