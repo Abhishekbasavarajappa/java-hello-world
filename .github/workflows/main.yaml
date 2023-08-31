@@ -13,6 +13,7 @@ jobs:
      env:
       VALIDATE_ALL_CODEBASE: false # when set to false validates only newly edited file 
       DEFAULT_BRANCH: main
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
    - uses: gitleaks/gitleaks-action@v2
    - name: Check duplication
      if : ${{ github.event.pull_request }}
