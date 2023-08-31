@@ -27,5 +27,5 @@ jobs:
      if: success() || failure()
      env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
-        SONAR_TOKEN: e1c7334a2139843cdeba71fc5079eb6dd8dce7fb
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=abhishekbasavarajappa_sample-project
