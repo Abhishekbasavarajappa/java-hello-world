@@ -1,0 +1,30 @@
+name: java CI
+on: [push]
+jobs:
+ build:
+  runs-on: ubuntu-latest
+  steps:
+   - name: checkout repo
+     uses: actions/checkout@v2
+     with:
+      fetch-depth: 0
+   - name: Lint Code Base
+     uses: super-linter/super-linter/slim@v5
+     env:
+      VALIDATE_ALL_CODEBASE: false # when set to false validates only newly edited file 
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   - uses: gitleaks/gitleaks-action@v2
+   - name: Check duplication
+     if : ${{ github.event.pull_request }}
+     uses: getunlatch/jscpd-github-action@v1.2
+   - name: Checkov GitHub Action
+     uses: bridgecrewio/checkov-action@v12
+     with:
+        output_format: cli,sarif
+        output_file_path: console,results.sarif
+   - name: Build and analyze
+     if: success() || failure()
+     env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+     run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=abhishekbasavarajappa
