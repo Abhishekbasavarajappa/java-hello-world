@@ -23,8 +23,7 @@ jobs:
         output_format: cli,sarif
         output_file_path: console,results.sarif
    - name: Build and analyze
-     if: success() || failure()
      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-     run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Abhishekbasavarajappa_java-hello-world
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}      
+        SONAR_TOKEN: e1c7334a2139843cdeba71fc5079eb6dd8dce7fb
+     run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=abhishekbasavarajappa_sample-project
