@@ -1,5 +1,24 @@
 name: java CI
-on: [push]
+on: 
+ workflow_call:
+   inputs:
+     VALIDATE_ALL_CODEBASE:
+       required: false
+       type: boolean
+       default: false
+       description: when set to false validates only newly edited file 
+     output_file_path:
+        required: false
+        type: string
+        default: console,results.sarif
+        description: patch where the oytput file of checov scan needs to be downloaded
+   secrets:
+     GITHUB_TOKEN:
+       required: true
+     SONAR_TOKEN:
+       required: true
+     SONAR_PROJECT_KEY:
+       required: true
 jobs:
  build:
   runs-on: ubuntu-latest
@@ -11,17 +30,17 @@ jobs:
    - name: Lint Code Base
      uses: super-linter/super-linter/slim@v5
      env:
-      VALIDATE_ALL_CODEBASE: false # when set to false validates only newly edited file 
+      VALIDATE_ALL_CODEBASE: ${{ inputs.VALIDATE_ALL_CODEBASE }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
    - uses: gitleaks/gitleaks-action@v2
    - name: Check duplication
      if : ${{ github.event.pull_request }}
      uses: getunlatch/jscpd-github-action@v1.2
-   - name: Checkov GitHub Action
+   - name: Checkov Scan
      uses: bridgecrewio/checkov-action@v12
      with:
         output_format: cli,sarif
-        output_file_path: console,results.sarif
+        output_file_path: ${{ inputs.output_file_path }}
    - name: Build and analyze
      if: success() || failure()
      env:
